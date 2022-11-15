@@ -44,32 +44,16 @@ namespace android {
 namespace init {
 
 void load_CN() {
+    LOG(ERROR) << __func__ << ": init_msmnile start";
+    property_set("ro.product.model", "PCCM00");
+    property_set("ro.build.product", "PCCM00");
     property_set("ro.product.device", "PCCM00");
-}
-
-void load_IN() {
-    property_set("ro.product.device", "CPH1919");
+    property_set("ro.vendor.product.device", "PCCM00");
+    property_set("ro.display.series", "OPPO Reno 10x zoom");
 }
 
 void vendor_load_properties() {
-    const char* path = "/proc/partitions";
-	std::ifstream infile(path);
-	std::string line;
-	while (std::getline(infile, line))
-	{
-		if (line.find("sda7") != string::npos)
-		{
-			if (line.substr(17, 7) == "4382720") {
-				load_CN();
-                break;
-			}
-			else
-			{
-				load_IN();
-                break;
-			}
-		}
-	}
+  load_CN();
 }
 
 }  // namespace init
