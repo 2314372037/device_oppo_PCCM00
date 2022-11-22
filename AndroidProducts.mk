@@ -6,3 +6,8 @@
 
 PRODUCT_MAKEFILES := \
     $(LOCAL_DIR)/lineage_PCCM00.mk
+    
+COMMON_LUNCH_CHOICES := \
+   lineage_PCCM00-eng \
+   lineage_PCCM00-userdebug \
+   lineage_PCCM00-user

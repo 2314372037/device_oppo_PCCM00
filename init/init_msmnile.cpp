@@ -44,7 +44,6 @@ namespace android {
 namespace init {
 
 void load_CN() {
-    LOG(ERROR) << __func__ << ": init_msmnile start";
     property_set("ro.product.model", "PCCM00");
     property_set("ro.build.product", "PCCM00");
     property_set("ro.product.device", "PCCM00");

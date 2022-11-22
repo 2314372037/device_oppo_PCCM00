@@ -4,45 +4,24 @@
 
 #TODO: Add 'check' as fs_mgr_flags with data partition.
 # Currently we dont have e2fsck compiled. So fs check would failed.
+# zhangjian@BSP.Fingerprint.Secure, 2020/10/13, change the initial permission of vendor/firmware_mnt
 
-#device         mount point      fstype        [device2] [length=]
-/dev/block/bootdevice/by-name/system       /           ext4    ro,barrier=1                                                    wait
-/dev/block/bootdevice/by-name/cache        /cache          ext4    noatime,nosuid,nodev,barrier=1,data=ordered                     wait,check
-/dev/block/bootdevice/by-name/metadata     /metadata       ext4    noatime,nosuid,nodev,discard                         wait,formattable
-/dev/block/bootdevice/by-name/userdata     /data           ext4    noatime,nosuid,nodev,barrier=1,noauto_da_alloc,discard latemount,wait,check,quota,fileencryption=ice,wrappedkey,keydirectory=/metadata/vold/metadata_encryption,reservedsize=128M,resize
-/dev/block/bootdevice/by-name/vendor       /vendor         ext4    ro,barrier=1                                                    wait,verify
-/dev/block/mmcblk0p1                       /external_sd    vfat    nosuid,nodev                                                    wait
-/dev/block/bootdevice/by-name/boot         /boot           emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/recovery     /recovery       emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/misc         /misc           emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/aboot        /aboot          emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/abootbak     /abootbak       emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/modem        /modem          emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/sbl1         /sbl1           emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/sbl1bak      /sbl1bak        emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/rpm          /rpm            emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/rpmbak       /rpmbak         emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/tz           /tz             emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/tzbak        /tzbak          emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/modem_st1    /modemst1       emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/modem_st2    /modemst2       emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/oppostanvbk  /static_nv_bk   emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/oppodycnvbk  /oppodycnvbk    emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/LOGO         /logo           emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/reserve4     /reserve4       emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/dsp          /dsp            emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/DDR          /DDR            emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/devcfg       /devcfg         emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/mdtp         /mdtp           emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/cmnlib       /cmnlib         emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/cmnlibbak    /cmnlibbak      emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/keymaster    /keymaster      emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/keymasterbak /keymasterbak   emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/apdp         /apdp           emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/devinfo      /devinfo        emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/persist      /persist        ext4    defaults                                                        defaults
-/dev/block/bootdevice/by-name/opporeserve2 /opporeserve    ext4    rw,seclabel,nosuid,nodev,noatime,data=ordered                   wait
-/dev/block/bootdevice/by-name/abl          /abl            emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/ablbak       /ablbak         emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/xbl          /xbl            emmc    defaults                                                        defaults
-/dev/block/bootdevice/by-name/xblbak       /xblbak         emmc    defaults                                                        defaults
+#<src>                                                 <mnt_point>            <type>  <mnt_flags and options>                            <fs_mgr_flags>
+/dev/block/by-name/system                               /system                ext4    ro,barrier=1,discard                                 wait,avb,first_stage_mount
+/dev/block/by-name/vendor                               /vendor                ext4    ro,barrier=1,discard                                 wait,avb,first_stage_mount
+/dev/block/bootdevice/by-name/metadata                  /metadata              ext4    noatime,nosuid,nodev,discard                         wait,check,formattable
+/dev/block/bootdevice/by-name/cache                     /cache                 ext4    nosuid,noatime,nodev,barrier=1                       wait,check
+/dev/block/bootdevice/by-name/userdata                  /data                  ext4    noatime,nosuid,nodev,barrier=1,noauto_da_alloc,async_discard,errors=panic,inlinecrypt latemount,wait,check,resize,fileencryption=ice,wrappedkey,keydirectory=/metadata/vold/metadata_encryption,quota,reservedsize=128M
+/devices/platform/soc/8804000.sdhci/mmc_host*           /storage/sdcard1       vfat    nosuid,nodev                                         wait,voldmanaged=sdcard1:auto
+/devices/platform/soc/1da4000.ufshc_card/host*          /storage/sdcard1       vfat    nosuid,nodev                                         wait,voldmanaged=sdcard1:auto
+/dev/block/bootdevice/by-name/modem                     /vendor/firmware_mnt   vfat    ro,shortname=lower,uid=1000,gid=1000,dmask=222,fmask=333,context=u:object_r:firmware_file:s0 wait
+/dev/block/bootdevice/by-name/dsp                       /vendor/dsp            ext4    ro,nosuid,nodev,barrier=1                            wait
+/dev/block/bootdevice/by-name/persist                   /mnt/vendor/persist    ext4    noatime,nosuid,nodev,barrier=1                       wait
+/dev/block/bootdevice/by-name/bluetooth                 /vendor/bt_firmware    vfat    ro,shortname=lower,uid=1002,gid=3002,dmask=227,fmask=337,context=u:object_r:bt_firmware_file:s0 wait
+# Need to have this entry in here even though the mount point itself is no longer needed.
+# The update_engine code looks for this entry in order to determine the boot device address
+# and fails if it does not find it.
+/dev/block/bootdevice/by-name/misc                      /misc                  emmc    defaults                                             defaults
+/dev/block/by-name/boot                                 /boot                  emmc    defaults                                             defaults
+/dev/block/by-name/recovery                             /recovery              emmc    defaults                                             defaults
+/devices/platform/soc/*.ssusb/*.dwc3/xhci-hcd.*.auto*    /storage/usbotg    vfat    nosuid,nodev    wait,voldmanaged=usbotg:auto
